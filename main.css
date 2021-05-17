@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  height: 100vh;
+  width: 100%;
+  padding: 10px;
+  background-color: #469A49;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board {
+  display: flex;
+  max-width: 100vw;
+  width: 100%;
+  border: 1px solid brown;
+  flex-wrap: wrap;
+  justify-content:center;
+}
+.tile {
+  width: 100px;
+  height: 75px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border: 1px solid white;
+}
