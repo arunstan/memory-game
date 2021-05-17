@@ -30,6 +30,13 @@ body {
   flex-wrap: wrap;
   justify-content:center;
 }
+
+@media screen and (min-width: 800px)  {
+  .board {
+    width: 50%;
+  }
+}
+
 .tile {
   width: 100px;
   height: 75px;
@@ -37,4 +44,5 @@ body {
   align-items:center;
   justify-content:center;
   border: 1px solid white;
+  cursor: pointer;
 }
