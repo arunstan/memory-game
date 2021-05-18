@@ -34,10 +34,16 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="app">
-        <div id="game-board" class="board">
+        <div class="app-inner">
+          <h1 class="title">Memory Game</h1>
+          <div id="game-board" class="board"></div>
+          <div class="info">
+            <div id="moves-container" class="moves">Moves: 0</div>
+            <button id="restart-button" class="restart-button">Restart</button>
+            <div id="timer" class="timer"></div>
+          </div>
         </div>
-    </div>
-    </div>
+      </div>
     </div>
     <script type="text/javascript" src="./main.js"></script>
   </body>

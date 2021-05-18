@@ -1,5 +1,8 @@
 (function () {
   const ID_BOARD_ELEMENT = 'game-board'
+  const ID_MOVES_CONTAINER= 'moves-container'
+  const ID_RESTART_BUTTON = 'restart-button'
+  const ID_TIMER = 'timer'
   const CLASS_TILE_ELEMENT = 'tile'
   const CLASS_TILE_MATCHED = 'matched'
 
@@ -11,6 +14,9 @@
   }
   const selectedTiles = []
   let matchedCount = 0
+  let movesCount = 0
+  let timeElapsed = 0
+  let timer = null
 
   const tileValues = ['🤩','😍','🥶','🦖','😈','👾','😜']
   const tileValuePairs = [...tileValues, ...tileValues]
@@ -26,7 +32,14 @@
   }
 
   const init = () => {
+    updateTimer()
+    tileData.length = 0
+    selectedTiles.length = 0
+    matchedCount = 0
+
+    updateMovesCount(0)
     shuffleArray(tileValuePairs)
+
     for(let i = 0; i < TILE_COUNT; i++) {
       tileData.push({id: i, value: tileValuePairs[i], ...defaultTileStatus })
     }
@@ -37,7 +50,6 @@
   const updateTile = (tileId) => {
     const tileContent = makeTileContent(tileData[tileId])
     const tileElement = document.querySelector(`[data-tile-id="${tileId}"]`)
-    //console.log(tileElement, tileContent)
     tileElement.removeChild(tileElement.firstChild)
     tileElement.appendChild(tileContent)
     if(tileData[tileId].matched) {
@@ -45,19 +57,27 @@
     }
   }
 
+  const updateMovesCount = (count) => {
+    movesCount = count !== undefined ? count : ++movesCount
+    document.getElementById(ID_MOVES_CONTAINER).innerText = `Moves: ${movesCount}`
+  }
+
   const handleTileClick = (e) => {
+    if(timeElapsed === 0) {
+      startTimer()
+    }
 
     if(!hasWon()) {
-      const tileId = e.target.dataset.tileId
+      const tileId = Number(e.target.dataset.tileId)
       const tile = tileData[tileId]
 
-      console.log(tileId, selectedTiles)
-
-      if(selectedTiles.length === 1 && selectedTiles[0] === tileId) {
+      if((selectedTiles.length === 1 && selectedTiles[0] === tileId) || tile.matched) {
         return
       }
       
-      selectedTiles.push(+tileId)
+      updateMovesCount()
+      
+      selectedTiles.push(tileId)
       updateTile(tileId)
       
       if(selectedTiles.length === 2) {
@@ -76,6 +96,7 @@
 
           if(hasWon()) {
             window.alert('You win')
+            stopTimer()
           }
         } else {
           selectedTiles.length = 0
@@ -88,15 +109,32 @@
     }
   }
 
+  const handleRestart = () => {
+    if(!hasWon() && movesCount > 0) {
+      const confirmation = window.confirm("Are you sure you want to restart?")
+      if(confirmation) {
+        initGame()
+      }
+    } else {
+      initGame()
+    }
+  }
+
 
   const makeTileContent = (tile) => {
-    //console.log(tile, selectedTiles)
     const isTileRevealed = selectedTiles.includes(tile.id) || tile.matched
     return document.createTextNode(isTileRevealed ? tile.value : '?')
   }
 
-  const initialRender = () => {
+  const removeAllChildNodes = (parent) => {
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
+  }
+
+  const renderTiles = () => {
     const boardElement = document.getElementById(ID_BOARD_ELEMENT)
+    removeAllChildNodes(boardElement)
     for (let i = 0; i < TILE_COUNT; i++) {
       const tileContent = makeTileContent(tileData[i])
       
@@ -110,10 +148,48 @@
     }
   }
 
-  const initGame = () => {
-    init()
-    initialRender()
+  const formatMillisToTime = (millis) => {
+    const totalSeconds = millis / 1000
+    const minutes = Math.round(totalSeconds / 60)
+    const seconds = totalSeconds % 60
+    const paddedMinutes = minutes < 10 ? `0${minutes}` :  `${minutes}`
+    const paddedSeconds = seconds < 10 ? `0${seconds}` :  `${seconds}`
+    return `${paddedMinutes}:${paddedSeconds}`
   }
 
+  const startTimer = () => {
+    if(!timer) {
+      timer = window.setInterval(() => {
+        timeElapsed += 1000
+        const timerElement = document.getElementById(ID_TIMER)
+        timerElement.innerHTML = formatMillisToTime(timeElapsed)
+      },1000)
+    }
+  }
+
+  const stopTimer = () => {
+    if(timer) {
+      window.clearInterval(timer)
+      timer = null
+    }
+  }
+
+  const updateTimer = () => {
+    stopTimer()
+    const timerElement = document.getElementById(ID_TIMER)
+    timerElement.innerHTML = '00:00'
+    timeElapsed = 0
+  }
+
+  const initGame = () => {
+    init()
+    renderTiles()
+  }
+
+  const setupEventHandlers = () => {
+    document.getElementById(ID_RESTART_BUTTON).addEventListener('click', handleRestart)
+  }
+  
+  setupEventHandlers()
   initGame()
 })();

@@ -6,6 +6,7 @@ body {
 body {
   height: 100vh;
   width: 100vw;
+  font-family: Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 }
 
 * {
@@ -20,9 +21,14 @@ body {
   display:flex;
   justify-content: center;
   align-items: center;
+  flex-flow: column;
 }
 
-.board {
+.title {
+  font-size: 60px;
+}
+
+.app-inner {
   display: flex;
   max-width: 100vw;
   width: 100%;
@@ -30,8 +36,25 @@ body {
   justify-content:center;
 }
 
+.board {
+  display: flex;
+  flex-flow: row;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.info {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  margin-top: 20px;
+  width:100%;
+  font-size:24px;
+}
+
+
 @media screen and (min-width: 800px)  {
-  .board {
+  .app-inner {
     width: 50%;
   }
 }
