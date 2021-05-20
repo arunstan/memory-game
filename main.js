@@ -3,10 +3,13 @@
   const ID_MOVES_CONTAINER= 'moves-container'
   const ID_RESTART_BUTTON = 'restart-button'
   const ID_TIMER = 'timer'
+  const ID_OVERLAY = 'overlay'
   const CLASS_TILE_ELEMENT = 'tile'
   const CLASS_TILE_MATCHED = 'matched'
+  const CLASS_TILE_REVEALED = 'revealed'
+  const CLASS_OVERLAY_SHOW = 'show'
 
-  const TILE_VISIBLE_DURATION = 700
+  const TILE_VISIBLE_DURATION = 900
   const TILE_COUNT = 14
   const tileData = []
   const defaultTileStatus = {
@@ -52,8 +55,14 @@
     const tileElement = document.querySelector(`[data-tile-id="${tileId}"]`)
     tileElement.removeChild(tileElement.firstChild)
     tileElement.appendChild(tileContent)
+    if(selectedTiles.includes(tileId)) {
+      tileElement.classList.add(CLASS_TILE_REVEALED)
+    } else {
+      tileElement.classList.remove(CLASS_TILE_REVEALED)
+    }
     if(tileData[tileId].matched) {
       tileElement.classList.add(CLASS_TILE_MATCHED)
+      tileElement.classList.add(CLASS_TILE_REVEALED)
     }
   }
 
@@ -95,7 +104,8 @@
           updateTile(tile2)
 
           if(hasWon()) {
-            window.alert('You win')
+            //window.alert('You win')
+            toggleModal()
             stopTimer()
           }
         } else {
@@ -188,6 +198,16 @@
 
   const setupEventHandlers = () => {
     document.getElementById(ID_RESTART_BUTTON).addEventListener('click', handleRestart)
+    document.getElementById(ID_OVERLAY).addEventListener('click', toggleModal)
+  }
+
+  const toggleModal = () => {
+    const modal = document.getElementById(ID_OVERLAY);
+    if(modal.classList.contains(CLASS_OVERLAY_SHOW)) {
+      modal.classList.remove(CLASS_OVERLAY_SHOW)
+    } else {
+      modal.classList.add(CLASS_OVERLAY_SHOW)
+    }
   }
   
   setupEventHandlers()

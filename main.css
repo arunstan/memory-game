@@ -34,6 +34,7 @@ body {
   width: 100%;
   flex-wrap: wrap;
   justify-content:center;
+  color: #192A29;
 }
 
 .board {
@@ -50,6 +51,8 @@ body {
   margin-top: 20px;
   width:100%;
   font-size:24px;
+  font-weight: bold;
+  align-items: center;
 }
 
 
@@ -65,11 +68,65 @@ body {
   display:flex;
   align-items:center;
   justify-content:center;
-  border: 1px solid white;
+  border: 1px solid #192A29;
   cursor: pointer;
   font-size: 40px;
+  margin: 3px;
+  transition: all 0.3s;
+  color: #192A29;
+  border-radius: 4px;
+  background-color: #9bd19d;
+}
+
+.tile.revealed {
+  border: 2px solid #192A29;
 }
 
 .tile.matched {
   cursor: default;
+  background-color: #FFC300;
+  border: 1px solid #192A29;
 }
+
+#overlay {
+  position: fixed;
+  width:100%;
+  height:100%;
+  background-color:rgba(0,0,0,0.5);
+  top:0;
+  justify-content:center;
+  align-items: center;
+  display: flex;
+  transform: scale(0);
+  opacity:0;
+  transition: all 0.2s;
+}
+
+#overlay.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.modal {
+  width: 50%;
+  height: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal h2 {
+  font-size: 54px;
+  font-weight: bold;
+  color: #FFC300
+}
+
+#restart-button {
+  background-color: #9bd19d;
+  border-radius: 4px;
+  padding:10px;
+  color: #192A29;
+  border: 1px solid #192A29;
+  cursor: pointer; 
+}
+
