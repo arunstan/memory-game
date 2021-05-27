@@ -4,10 +4,15 @@
   const ID_RESTART_BUTTON = 'restart-button'
   const ID_TIMER = 'timer'
   const ID_OVERLAY = 'overlay'
+  const ID_WIN_MODAL = 'win-modal' 
+  const ID_WIN_MODAL_NUM_MOVES = 'num-moves'
+  const ID_WIN_MODAL_TIME_SECS = 'time-secs'
   const CLASS_TILE_ELEMENT = 'tile'
   const CLASS_TILE_MATCHED = 'matched'
   const CLASS_TILE_REVEALED = 'revealed'
   const CLASS_OVERLAY_SHOW = 'show'
+  const CLASS_MODAL = 'modal'
+  const CLASS_MODAL_SHOW = 'show'
 
   const TILE_VISIBLE_DURATION = 900
   const TILE_COUNT = 14
@@ -16,6 +21,7 @@
     matched: false
   }
   const selectedTiles = []
+  
   let matchedCount = 0
   let movesCount = 0
   let timeElapsed = 0
@@ -104,9 +110,9 @@
           updateTile(tile2)
 
           if(hasWon()) {
-            //window.alert('You win')
-            toggleModal()
             stopTimer()
+            setupWinModal()
+            toggleModalOverlay()
           }
         } else {
           selectedTiles.length = 0
@@ -198,10 +204,30 @@
 
   const setupEventHandlers = () => {
     document.getElementById(ID_RESTART_BUTTON).addEventListener('click', handleRestart)
-    document.getElementById(ID_OVERLAY).addEventListener('click', toggleModal)
+    document.getElementById(ID_OVERLAY).addEventListener('click', toggleModalOverlay)
   }
 
-  const toggleModal = () => {
+  const hideAllModals = () => {
+    const modalOverlay = document.getElementById(ID_OVERLAY);
+    const modals = modalOverlay.querySelectorAll(`.${CLASS_MODAL}`)
+    for(let modal of modals) {
+      modal.classList.remove(CLASS_MODAL_SHOW)
+    }
+  }
+
+  const setupWinModal = () => {
+    const winModalNumMovesElement = document.getElementById(ID_WIN_MODAL_NUM_MOVES)
+    const winModalTimeSecsElement = document.getElementById(ID_WIN_MODAL_TIME_SECS)
+    const winModalElement = document.getElementById(ID_WIN_MODAL)
+
+    winModalNumMovesElement.innerText = movesCount
+    winModalTimeSecsElement.innerText = formatMillisToTime(timeElapsed)
+
+    hideAllModals()
+    winModalElement.classList.add(CLASS_MODAL_SHOW)
+  }
+
+  const toggleModalOverlay = () => {
     const modal = document.getElementById(ID_OVERLAY);
     if(modal.classList.contains(CLASS_OVERLAY_SHOW)) {
       modal.classList.remove(CLASS_OVERLAY_SHOW)
